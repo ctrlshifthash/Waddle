@@ -1,0 +1,55 @@
+# Render blueprint — deploys the Waddle World backend (Colyseus server) + site
+# (Vite React SPA). On render.com: New + → Blueprint → pick this repo. Then fill
+# the `sync: false` secrets in the dashboard. The client auto-wires to the server.
+services:
+  # ---- Backend: Colyseus game server (WebSocket + REST /worlds, /health) ----
+  - type: web
+    name: waddle-server
+    runtime: node
+    plan: free
+    region: oregon
+    buildCommand: npm ci
+    startCommand: npm --workspace server run start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: SOL_FAUCET_ENABLED
+        value: "true"
+      - key: SOLANA_SETTLE_ENABLED
+        value: "false"
+      - key: SOLANA_PAYOUT_MODE
+        value: mint
+      - key: PRIVY_ENFORCE
+        value: "false"
+      # --- set these in the Render dashboard (kept out of the repo) ---
+      - key: SOLANA_RPC_URL          # your Helius mainnet URL
+        sync: false
+      - key: SOLANA_TREASURY_SECRET  # base58 secret of the FUNDED treasury wallet
+        sync: false
+      - key: PRIVY_APP_ID
+        sync: false
+      - key: PRIVY_APP_SECRET
+        sync: false
+
+  # ---- Frontend: Vite React static site ----
+  - type: web
+    name: waddle-client
+    runtime: static
+    buildCommand: npm ci && npm --workspace client run build
+    staticPublishPath: ./client/dist
+    pullRequestPreviewsEnabled: false
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: VITE_PRIVY_APP_ID      # your Privy app id (public)
+        sync: false
+      - key: VITE_GAME_WS_URL       # auto-filled with the server host; client upgrades to wss://
+        fromService:
+          name: waddle-server
+          type: web
+          property: host
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

@@ -1,4 +1,5 @@
 import { Client, getStateCallbacks, type Room } from "colyseus.js";
+import { WS_URL } from "./endpoint";
 import {
   C2S, S2C, DEFAULT_ROOM, DEFAULT_WORLD, iglooRoomId, makeArea, parseArea, QUESTS_BY_ID,
   type JoinOptions, type PlayerView, type FurnitureView,
@@ -29,8 +30,6 @@ export type GameEvent =
   | "openPuffleShop" | "enterIgloo" | "exitIgloo";
 
 type Handler = (payload: any) => void;
-
-const WS_URL = import.meta.env.VITE_GAME_WS_URL || "ws://localhost:2567";
 
 function toView(p: any): PlayerView {
   return {

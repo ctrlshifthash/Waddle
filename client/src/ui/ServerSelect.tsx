@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { Snow } from "./Snow";
 import { SERVERS, populationLevel, normalizeWorldId } from "@shared";
-
-const HTTP_BASE = (import.meta.env.VITE_GAME_WS_URL || "ws://localhost:2567").replace(/^ws/, "http");
+import { HTTP_BASE } from "../net/endpoint";
 
 export function ServerSelect({
   name, onPick, onBack,
