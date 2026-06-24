@@ -8,3 +8,4 @@ build/
 server/data/*.json
 !server/data/.gitkeep
 .vite/
+.vite-cache/

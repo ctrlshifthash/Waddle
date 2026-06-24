@@ -8,7 +8,7 @@ services:
     runtime: node
     plan: free
     region: oregon
-    buildCommand: npm ci
+    buildCommand: npm install
     startCommand: npm --workspace server run start
     healthCheckPath: /health
     envVars:
@@ -36,7 +36,7 @@ services:
   - type: web
     name: waddle-client
     runtime: static
-    buildCommand: npm ci && npm --workspace client run build
+    buildCommand: npm install --include=dev && npm --workspace client run build
     staticPublishPath: ./client/dist
     pullRequestPreviewsEnabled: false
     envVars:
