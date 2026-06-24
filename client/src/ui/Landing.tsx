@@ -71,8 +71,8 @@ const FAQ = [
 // TODO: point these at the real links.
 const SOCIALS = [
   { key: "pump", label: "pump.fun", href: "https://pump.fun" },
-  { key: "x", label: "X", href: "https://x.com" },
-  { key: "github", label: "GitHub", href: "https://github.com" },
+  { key: "x", label: "X", href: "https://x.com/playWaddleWorld" },
+  { key: "github", label: "GitHub", href: "https://github.com/playWaddleWorld/Waddle-World" },
 ] as const;
 
 function SocialSvg({ k }: { k: string }) {
