@@ -107,7 +107,9 @@ interface DbData {
 }
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const DATA_DIR = path.resolve(__dirname, "../../data");
+// DATA_DIR lets a host (Render disk / Railway volume) point persistence at a
+// durable path so player progress + the faucet cap survive restarts.
+const DATA_DIR = process.env.DATA_DIR || path.resolve(__dirname, "../../data");
 const DB_FILE = path.join(DATA_DIR, "db.json");
 
 let db: Awaited<ReturnType<typeof JSONFilePreset<DbData>>>;
