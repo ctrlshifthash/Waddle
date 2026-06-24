@@ -4,9 +4,17 @@
 // back to the local dev server when unset.
 function resolveWs(): string {
   const raw = import.meta.env.VITE_GAME_WS_URL?.trim();
-  if (!raw) return "ws://localhost:2567";
-  if (/^wss?:\/\//i.test(raw)) return raw;
-  return `wss://${raw.replace(/^https?:\/\//i, "").replace(/\/+$/, "")}`;
+  if (raw) {
+    if (/^wss?:\/\//i.test(raw)) return raw;
+    return `wss://${raw.replace(/^https?:\/\//i, "").replace(/\/+$/, "")}`;
+  }
+  // No explicit URL → same-origin (single-service deploy): the server hosts this
+  // page AND the game socket, so connect back to wherever the page was served.
+  if (typeof window !== "undefined" && /^https?:$/.test(window.location.protocol)) {
+    const secure = window.location.protocol === "https:";
+    return `${secure ? "wss" : "ws"}://${window.location.host}`;
+  }
+  return "ws://localhost:2567";
 }
 
 /** WebSocket URL for the Colyseus client. */

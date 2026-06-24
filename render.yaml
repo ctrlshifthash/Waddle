@@ -1,15 +1,15 @@
-# Render blueprint — deploys the Waddle World backend (Colyseus server) + site
-# (Vite React SPA). On render.com: New + → Blueprint → pick this repo. Then fill
-# the `sync: false` secrets in the dashboard. The client auto-wires to the server.
+# Render blueprint — ONE service: the Colyseus server also serves the built Vite
+# site, so a single domain hosts both the game and the website.
+# On render.com: New + → Blueprint → pick this repo, then fill the `sync: false`
+# secrets in the dashboard.
 services:
-  # ---- Backend: Colyseus game server (WebSocket + REST /worlds, /health) ----
   - type: web
-    name: waddle-server
+    name: waddle
     runtime: node
-    plan: free
-    region: oregon
-    buildCommand: npm install
-    startCommand: npm --workspace server run start
+    plan: free        # NOTE: free has no persistent disk + sleeps when idle.
+    region: oregon    # For the real SOL cap to survive restarts, use a paid plan,
+    buildCommand: npm install --include=dev && npm run build --workspace client
+    startCommand: npm run start --workspace server
     healthCheckPath: /health
     envVars:
       - key: NODE_VERSION
@@ -22,7 +22,10 @@ services:
         value: mint
       - key: PRIVY_ENFORCE
         value: "false"
+      # add a persistent disk and set DATA_DIR to its mount path on a paid plan
       # --- set these in the Render dashboard (kept out of the repo) ---
+      - key: VITE_PRIVY_APP_ID       # Privy app id (public, baked into the build)
+        sync: false
       - key: SOLANA_RPC_URL          # your Helius mainnet URL
         sync: false
       - key: SOLANA_TREASURY_SECRET  # base58 secret of the FUNDED treasury wallet
@@ -31,25 +34,3 @@ services:
         sync: false
       - key: PRIVY_APP_SECRET
         sync: false
-
-  # ---- Frontend: Vite React static site ----
-  - type: web
-    name: waddle-client
-    runtime: static
-    buildCommand: npm install --include=dev && npm --workspace client run build
-    staticPublishPath: ./client/dist
-    pullRequestPreviewsEnabled: false
-    envVars:
-      - key: NODE_VERSION
-        value: "20"
-      - key: VITE_PRIVY_APP_ID      # your Privy app id (public)
-        sync: false
-      - key: VITE_GAME_WS_URL       # auto-filled with the server host; client upgrades to wss://
-        fromService:
-          name: waddle-server
-          type: web
-          property: host
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html

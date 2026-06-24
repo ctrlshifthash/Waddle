@@ -52,6 +52,20 @@ app.get("/worlds", async (_req, res) => {
   }
 });
 
+// Serve the built client from this same service (single-service deploy): static
+// assets + SPA fallback, so ONE domain hosts both the site and the game server.
+const clientDist = path.resolve(__dirname, "../../client/dist");
+if (existsSync(clientDist)) {
+  app.use(express.static(clientDist));
+  app.get("*", (req, res, next) => {
+    if (req.path.startsWith("/matchmake")) return next(); // let Colyseus handle it
+    res.sendFile(path.join(clientDist, "index.html"));
+  });
+  console.log(`🌐 Serving client from ${clientDist}`);
+} else {
+  console.log("ℹ️  No client build found — running API/WS only.");
+}
+
 const httpServer = createServer(app);
 const gameServer = new Server({
   transport: new WebSocketTransport({ server: httpServer }),
