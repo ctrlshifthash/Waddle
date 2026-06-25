@@ -69,8 +69,12 @@ const FAQ = [
 ];
 
 // TODO: point these at the real links.
+// $WADDLE token (pump.fun) — single source of truth for the contract address.
+const TOKEN_CA = "49P5KtqTucVM6XUDy7UqRQ7EmECD3vM9JvmDkNiSpump";
+const PUMP_URL = `https://pump.fun/coin/${TOKEN_CA}`;
+
 const SOCIALS = [
-  { key: "pump", label: "pump.fun", href: "https://pump.fun" },
+  { key: "pump", label: "pump.fun", href: PUMP_URL },
   { key: "x", label: "X", href: "https://x.com/playWaddleWorld" },
   { key: "github", label: "GitHub", href: "https://github.com/playWaddleWorld/Waddle-World" },
 ] as const;
@@ -93,6 +97,24 @@ function Socials({ lg }: { lg?: boolean }) {
           <span className="social-tip">{s.label}</span>
         </a>
       ))}
+    </div>
+  );
+}
+
+/** Contract-address pill: the daily pool is powered by the $WADDLE token. */
+function CaBox() {
+  const [copied, setCopied] = useState(false);
+  const copy = () => {
+    navigator.clipboard?.writeText(TOKEN_CA)
+      .then(() => { setCopied(true); setTimeout(() => setCopied(false), 1400); })
+      .catch(() => {});
+  };
+  return (
+    <div className="ca-box reveal">
+      <span className="ca-tag">$WADDLE CA</span>
+      <code className="ca-addr" title={TOKEN_CA}>{TOKEN_CA}</code>
+      <button className="ca-copy" onClick={copy}>{copied ? "Copied ✓" : "Copy"}</button>
+      <a className="ca-pump" href={PUMP_URL} target="_blank" rel="noopener noreferrer">View on pump.fun ↗</a>
     </div>
   );
 }
@@ -255,6 +277,8 @@ export function Landing({ onPlay }: { onPlay: () => void }) {
             {EARN_POINTS.map((p) => (<div className="earn-point" key={p}>{p}</div>))}
           </div>
         </div>
+        <p className="ca-caption reveal">The daily SOL pool is powered by <b>$WADDLE</b> on pump.fun:</p>
+        <CaBox />
       </section>
 
       <section className="landing-strip reveal">

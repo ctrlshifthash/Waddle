@@ -524,6 +524,38 @@ input[type="range"] { width: 100%; accent-color: var(--accent-2); }
 .socials-lg .social-img { width: 40px; height: 40px; }
 .landing-footer .social { background: rgba(12,36,64,.07); border-color: rgba(12,36,64,.16); color: #0c2440; }
 
+/* ---------- $WADDLE contract-address box (pump.fun) ---------- */
+.ca-caption { text-align: center; margin: 26px 0 8px; color: #2f4a63; font-weight: 600; }
+.ca-box {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+  max-width: 680px; margin: 0 auto;
+  padding: 12px 14px; border-radius: 16px;
+  background: rgba(75,224,138,.10);
+  border: 1px solid rgba(75,224,138,.5);
+  box-shadow: 0 10px 30px rgba(75,224,138,.18);
+}
+.ca-tag {
+  font-weight: 800; font-size: .74rem; letter-spacing: .6px; text-transform: uppercase;
+  color: #1f9e60; white-space: nowrap;
+}
+.ca-addr {
+  flex: 1 1 240px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-family: ui-monospace, "SFMono-Regular", Menlo, monospace; font-size: .9rem; color: #0c2440;
+  background: rgba(255,255,255,.72); border-radius: 9px; padding: 9px 11px;
+}
+.ca-copy {
+  border: 0; cursor: pointer; font-weight: 800; font-size: .9rem;
+  background: #0c2440; color: #fff; border-radius: 9px; padding: 9px 16px;
+  transition: transform .12s ease, background .12s ease;
+}
+.ca-copy:hover { transform: translateY(-1px); background: #15375f; }
+.ca-pump {
+  font-weight: 800; font-size: .9rem; text-decoration: none; white-space: nowrap; color: #06371f;
+  background: linear-gradient(180deg, #6ee79a, #34c172); border-radius: 9px; padding: 9px 16px;
+  box-shadow: 0 6px 16px rgba(75,224,138,.45); transition: transform .12s ease, box-shadow .12s ease;
+}
+.ca-pump:hover { transform: translateY(-1px); box-shadow: 0 9px 22px rgba(75,224,138,.6); }
+
 /* ---------- content sections ---------- */
 .landing-section { position: relative; z-index: 2; max-width: 980px; margin: 44px auto 0; padding: 0 18px; text-align: center; }
 .section-title { color: #fff; font-size: clamp(26px, 4.4vw, 40px); margin: 0 0 6px; text-shadow: 0 3px 0 #1769aa, 0 8px 20px rgba(0,0,0,.3); }
